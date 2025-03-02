@@ -1,10 +1,10 @@
-name: Development Build
+name: Deploy to Development
 
 on:
   push:
     branches: [ development ]
-  pull_request:
-    branches: [ development ]
+#  pull_request:
+#    branches: [ development ]
 
 jobs:
   build:
