@@ -22,11 +22,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
-      - name: Install pnpm
-        run: |
-          npm install -g pnpm
-          # Add the global npm bin folder to PATH
-          echo "$(npm bin -g)" >> $GITHUB_PATH
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8  # or any desired version
 
       - name: Install dependencies
         run: pnpm install
