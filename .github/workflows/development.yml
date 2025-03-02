@@ -20,12 +20,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 8  # Use your desired pnpm version
+      - name: Install pnpm globally
+        run: npm install -g pnpm
+
+      - name: Add pnpm to PATH
+        run: echo "$(npm bin -g)" >> $GITHUB_PATH
 
       - name: Verify pnpm installation
         run: |
