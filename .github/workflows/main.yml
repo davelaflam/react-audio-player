@@ -1,51 +1,46 @@
-name: Deploy to Production
+name: Production Build
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: main
-
-    env:
-      FRESH_ENV: ${{ vars.PRD_FRESH_ENV }}
-      STRIPE_SECRET_KEY: ${{ secrets.PRD_STRIPE_SECRET_KEY }}
-      STRIPE_WEBHOOK_SECRET: ${{ secrets.PRD_STRIPE_WEBHOOK_SECRET }}
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.PRD_SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
-      SUPABASE_JWT_SECRET: ${{ secrets.PRD_SUPABASE_JWT_SECRET }}
-      SUPABASE_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
-      VERBOSE: ${{ vars.PRD_VERBOSE }}
-      WEB_APP_URL: ${{ secrets.PRD_WEB_APP_URL }}
-
+    strategy:
+      matrix:
+        node-version: [20.x]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - uses: supabase/setup-cli@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          version: latest
+          node-version: ${{ matrix.node-version }}
 
-      - name: Link to project
-        run: supabase link --project-ref $SUPABASE_PROJECT_ID
+      - name: Install pnpm globally
+        run: npm install -g pnpm
 
-      - name: Set Environment Variable Secrets
+      - name: Add pnpm to PATH
+        run: echo "$(npm bin -g)" >> $GITHUB_PATH
+
+      - name: Verify pnpm installation
         run: |
-          supabase secrets set FRESH_ENV=$FRESH_ENV
-          supabase secrets set STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
-          supabase secrets set STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET
-          supabase secrets set VERBOSE=$VERBOSE
-          supabase secrets set WEB_APP_URL=$WEB_APP_URL
+          echo "pnpm version:"
+          pnpm --version
+          echo "PATH: $PATH"
 
-      - name: Migrate Database
-        run: supabase db push
+      - name: Install dependencies
+        run: pnpm install
 
-      - name: Deploy Stripe Function
-        run: supabase functions deploy --no-verify-jwt stripe
+      - name: Lint code
+        run: pnpm lint
 
-      - name: Deploy Users Function
-        run: supabase functions deploy users
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build project
+        run: pnpm build

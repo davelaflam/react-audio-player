@@ -1,8 +1,28 @@
 {
   "name": "react-audio-player-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "🎵 A modern, sleek, and feature-rich audio player built with React, MUI, and TypeScript. This progressive web app provides an intuitive and dynamic listening experience. Designed with a mobile-first approach, it seamlessly integrates Howler.js for advanced audio playback. Ideal for music enthusiasts and developers looking to integrate an elegant audio player.",
   "type": "module",
+  "author": "Dave-LaFlam",
+  "keywords": [
+    "react",
+    "audio-player",
+    "music",
+    "typescript",
+    "mui",
+    "material-ui",
+    "vite",
+    "howler.js",
+    "music-player",
+    "playlist",
+    "media-player",
+    "web-audio",
+    "frontend",
+    "progressive-web-app",
+    "pwa",
+    "open-source"
+  ],
+  "license": "ISC",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -13,9 +33,6 @@
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage"
   },
-  "keywords": [],
-  "author": "Dave-LaFlam",
-  "license": "ISC",
   "dependencies": {
     "@emotion/cache": "11.14.0",
     "@emotion/react": "11.14.0",
