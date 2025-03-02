@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "lib": ["ES2017", "DOM"]
+  },
+  "include": ["src/**/*", "**/*.test.ts", "**/*.test.tsx"]
+}

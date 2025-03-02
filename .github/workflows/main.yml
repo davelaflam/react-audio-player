@@ -1,0 +1,46 @@
+name: Production Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install pnpm globally
+        run: npm install -g pnpm
+
+      - name: Add pnpm to PATH
+        run: echo "$(npm bin -g)" >> $GITHUB_PATH
+
+      - name: Verify pnpm installation
+        run: |
+          echo "pnpm version:"
+          pnpm --version
+          echo "PATH: $PATH"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint code
+        run: pnpm lint
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build project
+        run: pnpm build
