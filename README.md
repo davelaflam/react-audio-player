@@ -46,28 +46,33 @@
     cd react-audio-player
     ```
 
-2. **Install dependencies:**
+2. **Install pnpm:**
     ```bash
-    npm install
+    npm install -g pnpm
     ```
 
-3. **Start the development server:**
+3. **Install dependencies:**
     ```bash
-    npm start
+    pnpm install
+    ```
+
+4. **Start the development server:**
+    ```bash
+    pnpm start
     ```
    or (depending on your scripts)
     ```bash
-    npm run dev
+    pnpm run dev
     ```
 
-4. **Build for production:**
+5. **Build for production:**
     ```bash
-    npm run build
+    pnpm run build
     ```
 
-5. **Preview the production build:**
+6. **Preview the production build:**
     ```bash
-    npm run preview
+    pnpm run preview
     ```
 
 ---
