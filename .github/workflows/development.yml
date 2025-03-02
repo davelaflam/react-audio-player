@@ -20,12 +20,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          # Using pnpm caching here is supported if pnpm lock file exists
           cache: 'pnpm'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8  # or any desired version
+          version: 8  # Specify your desired pnpm version
+
+      - name: Verify pnpm installation
+        run: |
+          echo "pnpm version:"
+          pnpm --version
+          echo "npm global bin:"
+          npm bin -g
 
       - name: Install dependencies
         run: pnpm install
