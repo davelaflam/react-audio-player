@@ -13,7 +13,7 @@ export default defineConfig({
     dedupe: ['react', 'react-dom', '@emotion/react', '@emotion/styled'],
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom']
+    include: ['react', 'react-dom', 'react-router-dom'],
   },
   build: {
     target: 'esnext',
