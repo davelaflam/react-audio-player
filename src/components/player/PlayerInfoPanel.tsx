@@ -1,12 +1,6 @@
 import React from 'react'
 import { Card, CardContent, Typography, Box } from '@mui/material'
-
-interface TrackInfo {
-  artist: string
-  title: string
-  seek: number
-  duration: number
-}
+import { TrackInfo } from '../../types'
 
 interface PlayerInfoPanelProps {
   trackInfo: TrackInfo

@@ -14,18 +14,7 @@ import {
   VolumeOff,
 } from '@mui/icons-material'
 
-interface PlayerControlsBarsProps {
-  loop: boolean
-  shuffle: boolean
-  progress: number
-  playTrack: () => void
-  pauseTrack: () => void
-  stopTrack: () => void
-  skipTrack: (direction: 'next' | 'prev') => void
-  toggleLoop: (value: boolean) => void
-  toggleShuffle: (value: boolean) => void
-  updateSeek: (percents: number) => void
-}
+import { PlayerControlsBarsProps } from '../../types'
 
 const PlayerControlsBars: React.FC<PlayerControlsBarsProps> = ({
   loop,

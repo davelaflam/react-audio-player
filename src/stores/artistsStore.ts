@@ -1,46 +1,8 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { Howl } from 'howler'
+
 import MillerLaneAlbumCover from '../assets/images/music/miller-lane--family-tree.jpg'
-
-export interface Track {
-  title: string
-  artist: string
-  howl: Howl | null
-  display: boolean
-}
-
-export interface Album {
-  title: string
-  year: string
-  cover: string
-  tracks: Track[]
-}
-
-export interface Artist {
-  id: number
-  artist: string
-  imageUrl: string
-  isActive: boolean
-  createdAt: string
-  createdBy: string
-  deletedAt: string | null
-  deletedBy: string | null
-  updatedAt: string
-  updatedBy: string | null
-  albums: Album[]
-  bandMembers: string[]
-  audioPath: string
-}
-
-interface ArtistState {
-  artists: Artist[]
-  artist?: Artist
-  errors: Record<string, string | null>
-  loading: Record<string, boolean>
-  globalSelectedTrack: Track | null
-  setGlobalSelectedTrack: (track: Track) => void
-}
+import { ArtistState, Track } from '../types'
 
 const millerLanePlayList: Track[] = [
   { title: 'Family Tree', artist: 'Miller Lane', howl: null, display: true },

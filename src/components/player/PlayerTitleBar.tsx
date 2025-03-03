@@ -1,13 +1,7 @@
 import React from 'react'
 import { Card, CardContent, Box, Typography, Avatar, List, ListItem } from '@mui/material'
 
-interface PlayerTitleBarProps {
-  albumCoverPath: string
-  albumArtist: string
-  albumTitle: string
-  albumYear: string
-  bandMembers: string[]
-}
+import { PlayerTitleBarProps } from '../../types'
 
 const PlayerTitleBar: React.FC<PlayerTitleBarProps> = ({
   albumCoverPath,
