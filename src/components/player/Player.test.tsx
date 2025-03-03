@@ -1,7 +1,8 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
-import Player from './Player'
-import { Track } from './types'
 import { Howl } from 'howler'
+
+import Player from './Player'
+import { Track } from '../../types'
 
 /**
  * The Howl interface is defined as follows:

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react'
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { Howl } from 'howler'
 import { Box, Paper } from '@mui/material'
 
@@ -7,19 +7,9 @@ import PlayerPlaylistPanel from './PlayerPlaylistPanel'
 import PlayerControlsBars from './PlayerControlsBars'
 import PlayerInfoPanel from './PlayerInfoPanel'
 import PlayerTitleBar from './PlayerTitleBar'
-import { Track, TrackInfo } from './types'
+import { PlayerProps, Track, TrackInfo } from '../../types'
 
 let globalActivePlayer: Howl | null = null
-
-interface PlayerProps {
-  playlist: Track[]
-  audioPath?: string
-  albumCoverPath: string
-  albumTitle: string
-  albumYear: string
-  artist: string
-  bandMembers: string[]
-}
 
 const Player: React.FC<PlayerProps> = ({
   playlist,
@@ -91,7 +81,8 @@ const Player: React.FC<PlayerProps> = ({
     playlist.forEach((track) => {
       const file = track.title.replace(/\s/g, '_')
       const srcPath = `/music/${audioPath}/${file}.mp3`
-      console.log('Attempting to load:', srcPath)
+      // console.log('Attempting to load:', srcPath)
+
       if (!track.howl) {
         track.howl = new Howl({
           src: [srcPath],
@@ -100,6 +91,7 @@ const Player: React.FC<PlayerProps> = ({
           onloaderror: (_id, error) => console.error(`Error loading ${file}:`, error),
           onend: () => {
             console.log(`Track "${file}" ended`)
+
             // Ensure this onend callback only applies if this track is still active.
             if (globalActivePlayer !== track.howl) {
               console.log(`onend: "${file}" is not active; ignoring.`)
@@ -125,7 +117,7 @@ const Player: React.FC<PlayerProps> = ({
         })
       }
     })
-  }, [audioPath, play, playlist, skip])
+  }, [audioPath, playlist])
 
   function selectTrack(track: Track) {
     console.log('selectTrack:', track.title)
@@ -136,38 +128,43 @@ const Player: React.FC<PlayerProps> = ({
     play(trackIndex)
   }
 
-  function play(idx?: number) {
-    const newIndex = idx !== undefined ? idx : validIndex
+  const play = useCallback(
+    (idx?: number) => {
+      const newIndex = idx !== undefined ? idx : validIndex
 
-    // If switching to a new track, stop the previous track.
-    if (globalActivePlayer && globalActivePlayer !== playlist[newIndex].howl) {
-      console.log('Switching tracks: stopping previous track')
-      globalActivePlayer.loop(false)
-      globalActivePlayer.stop()
-      globalActivePlayer = null
-    }
+      // If switching to a new track, stop the previous track.
+      if (globalActivePlayer && globalActivePlayer !== playlist[newIndex].howl) {
+        console.log('Switching tracks: stopping previous track')
+        globalActivePlayer.loop(false)
+        globalActivePlayer.stop()
+        globalActivePlayer = null
+      }
 
-    if (!playlist[newIndex]) {
-      console.error('Invalid track index:', newIndex, playlist)
-      return
-    }
-    setIndex(newIndex)
-    const track = playlist[newIndex]
-    console.log('Attempting to play track:', track.title)
-    setSelectedTrack(track)
-    artistsStore.setGlobalSelectedTrack(track)
-    indexRef.current = newIndex
-    // Set the track to loop if repeat is enabled.
-    if (track.howl) {
-      track.howl.loop(loop)
-      const playId = track.howl.play()
-      console.log(`Playing track "${track.title}" with playId:`, playId)
-      globalActivePlayer = track.howl
-      setPlaying(true)
-    } else {
-      console.error(`Track "${track.title}" has no howl instance`)
-    }
-  }
+      if (!playlist[newIndex]) {
+        console.error('Invalid track index:', newIndex, playlist)
+        return
+      }
+
+      setIndex(newIndex)
+      const track = playlist[newIndex]
+      console.log('Attempting to play track:', track.title)
+      setSelectedTrack(track)
+      artistsStore.setGlobalSelectedTrack(track)
+      indexRef.current = newIndex
+
+      // Set the track to loop if repeat is enabled.
+      if (track.howl) {
+        track.howl.loop(loop)
+        const playId = track.howl.play()
+        console.log(`Playing track "${track.title}" with playId:`, playId)
+        globalActivePlayer = track.howl
+        setPlaying(true)
+      } else {
+        console.error(`Track "${track.title}" has no howl instance`)
+      }
+    },
+    [validIndex, playlist, loop, setIndex, setSelectedTrack, setPlaying, artistsStore] // Dependencies
+  )
 
   function pause() {
     console.log('Pausing track')
@@ -184,29 +181,35 @@ const Player: React.FC<PlayerProps> = ({
     }
   }
 
-  function skip(direction: 'next' | 'prev') {
-    console.log('Skipping track:', direction)
-    if (currentTrack?.howl?.playing()) {
-      currentTrack.howl.stop()
-    }
-    let newIndex = validIndex
-    if (shuffleRef.current) {
-      newIndex = Math.floor(Math.random() * playlist.length)
-      if (playlist.length > 1) {
-        while (newIndex === indexRef.current) {
-          newIndex = Math.floor(Math.random() * playlist.length)
-        }
+  const skip = useCallback(
+    (direction: 'next' | 'prev') => {
+      console.log('Skipping track:', direction)
+      if (currentTrack?.howl?.playing()) {
+        currentTrack.howl.stop()
       }
-    } else {
-      newIndex =
-        direction === 'next'
-          ? (indexRef.current + 1) % playlist.length
-          : (indexRef.current - 1 + playlist.length) % playlist.length
-    }
-    setIndex(newIndex)
-    play(newIndex)
-    artistsStore.setGlobalSelectedTrack(playlist[newIndex])
-  }
+
+      let newIndex = validIndex
+
+      if (shuffleRef.current) {
+        newIndex = Math.floor(Math.random() * playlist.length)
+        if (playlist.length > 1) {
+          while (newIndex === indexRef.current) {
+            newIndex = Math.floor(Math.random() * playlist.length)
+          }
+        }
+      } else {
+        newIndex =
+          direction === 'next'
+            ? (indexRef.current + 1) % playlist.length
+            : (indexRef.current - 1 + playlist.length) % playlist.length
+      }
+
+      setIndex(newIndex)
+      play(newIndex)
+      artistsStore.setGlobalSelectedTrack(playlist[newIndex])
+    },
+    [currentTrack.howl, validIndex, play, artistsStore, playlist] // Dependencies
+  )
 
   // Toggle functions: activating one disables the other.
   function toggleLoop(value: boolean) {

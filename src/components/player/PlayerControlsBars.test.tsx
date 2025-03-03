@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import PlayerControlsBars from './PlayerControlsBars'
 import { Howler } from 'howler'
+
+import PlayerControlsBars from './PlayerControlsBars'
 
 describe('PlayerControlsBars', () => {
   const playTrack = jest.fn()
