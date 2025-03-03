@@ -1,14 +1,8 @@
 import React from 'react'
 import { List, ListItemButton, Typography, Paper } from '@mui/material'
-import { Track } from './types'
-import { useArtistsStore } from '../../stores/artistsStore'
 
-interface PlayerPlaylistPanelProps {
-  playlist: Track[]
-  selectedTrack: Track | null
-  selectTrack: (track: Track) => void
-  playTrack: (idx?: number) => void
-}
+import { useArtistsStore } from '../../stores/artistsStore'
+import { PlayerPlaylistPanelProps, Track } from '../../types'
 
 const PlayerPlaylistPanel: React.FC<PlayerPlaylistPanelProps> = ({
   playlist,
