@@ -99,11 +99,9 @@ describe('PlayerControlsBars', () => {
 
     const volumeButton = screen.getByRole('button', { name: /toggle volume/i })
 
-    // Click to mute.
     fireEvent.click(volumeButton)
     expect(muteSpy).toHaveBeenCalledWith(true)
 
-    // Click again to unmute.
     fireEvent.click(volumeButton)
     expect(muteSpy).toHaveBeenCalledWith(false)
 

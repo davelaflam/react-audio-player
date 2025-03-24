@@ -97,14 +97,14 @@ const PlayerTitleBar: React.FC<PlayerTitleBarProps> = ({
             </List>
           </Box>
         </Box>
-        {/* Album Year: for desktop, show on right */}
+
         <Box sx={{ display: { xs: 'none', md: 'block' }, alignSelf: 'center' }}>
           <Typography variant="subtitle1" sx={{ color: 'grey.500', whiteSpace: 'nowrap', fontSize: { md: '1rem' } }}>
             {albumYear}
           </Typography>
         </Box>
       </CardContent>
-      {/* For mobile: display album year below */}
+
       <Box sx={{ display: { xs: 'block', md: 'none' }, textAlign: 'center', mt: 1 }}>
         <Typography variant="subtitle2" sx={{ color: 'grey.500', fontSize: '12px' }}>
           {albumYear}

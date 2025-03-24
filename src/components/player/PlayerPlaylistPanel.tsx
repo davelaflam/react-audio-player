@@ -4,19 +4,13 @@ import { List, ListItemButton, Typography, Paper } from '@mui/material'
 import { useArtistsStore } from '../../stores/artistsStore'
 import { PlayerPlaylistPanelProps, Track } from '../../types'
 
-const PlayerPlaylistPanel: React.FC<PlayerPlaylistPanelProps> = ({
-  playlist,
-  // selectedTrack,
-  selectTrack,
-  // playTrack,
-}) => {
+const PlayerPlaylistPanel: React.FC<PlayerPlaylistPanelProps> = ({ playlist, selectTrack }) => {
   const artistsStore = useArtistsStore()
 
   const handleSelectTrack = (track: Track, _index: number) => {
     if (artistsStore.globalSelectedTrack !== track) {
       artistsStore.setGlobalSelectedTrack(track)
       selectTrack(track)
-      // Optionally, you can call playTrack(index) if you want auto-play
     }
   }
 

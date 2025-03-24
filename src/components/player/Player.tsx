@@ -211,7 +211,10 @@ const Player: React.FC<PlayerProps> = ({
     [currentTrack.howl, validIndex, play, artistsStore, playlist] // Dependencies
   )
 
-  // Toggle functions: activating one disables the other.
+  /**
+   * Toggle functions: activating one disables the other.
+   * @param value
+   */
   function toggleLoop(value: boolean) {
     console.log('Toggle loop:', value)
     setLoop(value)
@@ -252,15 +255,11 @@ const Player: React.FC<PlayerProps> = ({
       ) : (
         <Box>
           <PlayerTitleBar
-            // playlist={playlist}
             albumCoverPath={albumCoverPath}
             albumArtist={artist}
             albumTitle={albumTitle}
             albumYear={albumYear}
             bandMembers={bandMembers}
-            // selectedTrack={selectedTrack}
-            // selectTrack={selectTrack}
-            // playTrack={play}
           />
           <PlayerInfoPanel trackInfo={getTrackInfo} albumCoverPath={albumCoverPath} />
           <PlayerControlsBars
